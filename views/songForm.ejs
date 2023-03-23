@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			http-equiv="X-UA-Compatible"
+			content="IE=edge"
+		/>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<link
+			rel="stylesheet"
+			href="/assets/css/bootstrap.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="/assets/css/styles.css"
+		/>
+		<script
+			src="/assets/js/bootstrap.bundle.min.js"
+			defer
+		></script>
+		<title>My Album</title>
+	</head>
+	<body>
+		<main class="container-md">
+			<%- include('partials/nav') %>
+			<div class="form-body">
+				<div class="row">
+					<div class="form-holder">
+						<div class="form-content">
+							<div class="form-items">
+								<h3>Nhap nhac</h3>
+								<form
+									method="post"
+									action="/songs/"
+									class="requires-validation"
+									novalidate
+									enctype="multipart/form-data"
+								>
+									<div class="col-md-12">
+										<select
+											class="form-select mt-3"
+											required
+											name="authorId"
+										>
+											<option
+												selected
+												disabled
+												value=""
+											>
+												Tac gia
+											</option>
+											<% for( let author of authors) { %>
+											<option value="<%= author.id %>">
+												<%= author.authorName %>
+											</option>
+											<% } %>
+										</select>
+									</div>
+
+									<div class="col-md-12 mt-3">
+										<label class="ms-3">Tai len bai hat</label>
+										<input
+											accept="audio/*, video/*"
+											class="form-control"
+											type="file"
+											name="song"
+											required
+										/>
+									</div>
+
+									<div class="col-md-12 mt-3">
+										<label class="ms-3">Tai len thumbnail</label>
+										<input
+											accept="image/*"
+											class="form-control"
+											type="file"
+											name="thumbnail"
+											required
+										/>
+									</div>
+
+									<div class="form-button mt-3">
+										<button
+											id="submit"
+											type="submit"
+											class="btn btn-primary"
+										>
+											Them
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

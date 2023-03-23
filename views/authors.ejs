@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			http-equiv="X-UA-Compatible"
+			content="IE=edge"
+		/>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<link
+			rel="stylesheet"
+			href="/assets/css/bootstrap.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="/assets/css/styles.css"
+		/>
+		<script
+			src="/assets/js/bootstrap.bundle.min.js"
+			defer
+		></script>
+		<script
+			src="https://kit.fontawesome.com/9d327365fd.js"
+			crossorigin="anonymous"
+		></script>
+		<title>My Album</title>
+	</head>
+	<body>
+		<main class="container-md">
+			<%- include('partials/nav') %>
+			<div class="row playlist-area">
+				<% for( let author of authors ) { %>
+				<div class="mix col-lg-3 col-md-3 col-sm-6">
+					<div class="playlist-item">
+						<div class="playlist-item__imgbox">
+							<img
+								src="/<%= author.avatar %>"
+								alt="Avatar"
+								class="playlist-item__img"
+							/>
+							<% if (auth) { %>
+							<div class="opacity-box">
+								<form
+									action="/authors/<%= author.id %>?_method=DELETE"
+									method="post"
+									style="display: inline"
+									class="form-delete-author"
+								>
+									<div class="icon-button button-delete-song">
+										<i class="fa-sharp fa-solid fa-xmark"></i>
+									</div>
+								</form>
+							</div>
+							<% } %>
+						</div>
+						<h5><%= author.authorName %></h5>
+						<p>Ngay sinh: <%= author.dob.toLocaleDateString('vi-VN') %></p>
+					</div>
+				</div>
+				<% } %>
+			</div>
+		</main>
+		<% if (auth) { %>
+		<script>
+			const authorItems = document.querySelectorAll(".playlist-item");
+			authorItems.forEach((item) => {
+				const btnDelete = item.querySelector(".button-delete-song");
+				const formD = item.querySelector(".form-delete-author");
+				btnDelete.addEventListener("click", () => {
+					formD.submit();
+				});
+			});
+		</script>
+		<% } %>
+	</body>
+</html>

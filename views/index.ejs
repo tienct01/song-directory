@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			http-equiv="X-UA-Compatible"
+			content="IE=edge"
+		/>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<link
+			rel="stylesheet"
+			href="/assets/css/bootstrap.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="/assets/css/styles.css"
+		/>
+
+		<script
+			src="/assets/js/bootstrap.bundle.min.js"
+			defer
+		></script>
+		<script
+			src="https://kit.fontawesome.com/9d327365fd.js"
+			crossorigin="anonymous"
+		></script>
+		<title>My Album</title>
+	</head>
+	<body>
+		<main class="container-md">
+			<%- include('partials/nav') %>
+			<div class="d-flex">
+				<div class="inputs w-100">
+					<form
+						action="/songs"
+						method="get"
+					>
+						<i class="fa fa-search"></i>
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Tìm bài hát ..."
+							name="q"
+							value="<%= query %>"
+						/>
+					</form>
+				</div>
+				<div class="inputs mx-4">
+					<% if (!auth) { %>
+					<form
+						action="/auth"
+						method="get"
+					>
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Auth code ..."
+							name="authcode"
+						/>
+					</form>
+					<% } else { %>
+					<a
+						href="/logout"
+						class="btn btn-secondary"
+						>Logout</a
+					>
+					<% } %>
+				</div>
+			</div>
+			<div class="row playlist-area">
+				<% for( let index = 0; index < songs.length; index++ ) { %>
+				<div
+					class="mix col-lg-3 col-md-4 col-sm-6"
+					data-songurl="/<%= songs[index].songFile %>"
+					data-song="<%= songs[index].id %>"
+				>
+					<div class="playlist-item">
+						<div class="playlist-item__imgbox">
+							<img
+								src="/<%= songs[index].thumbnail %>"
+								alt="Avatar"
+								class="playlist-item__img"
+							/>
+							<div class="opacity-box">
+								<div class="icon-button button-play-song">
+									<i class="fa-solid fa-play"></i>
+								</div>
+								<% if (auth) { %>
+								<form
+									action="/songs/<%= songs[index].id %>?_method=DELETE"
+									method="post"
+									style="display: inline"
+									class="form-delete-song"
+								>
+									<button
+										class="icon-button button-delete-song"
+										type="button"
+										data-bs-toggle="modal"
+										data-bs-target="#verifyModal"
+									>
+										<i class="fa-sharp fa-solid fa-xmark"></i>
+									</button>
+								</form>
+								<% } %>
+							</div>
+						</div>
+						<h5><%= songs[index].songName %></h5>
+						<% if (songs[index].Author) { %>
+						<p>Author: <%= songs[index].Author.authorName %></p>
+						<% } %>
+					</div>
+				</div>
+				<% } %>
+			</div>
+		</main>
+
+		<!-- Audio player -->
+		<main>
+			<div
+				class="buf"
+				style="min-height: 15vh; width: 100%"
+			></div>
+			<div class="audio-container">
+				<div class="audio-part song-info d-flex">
+					<% if (prevSong) { %>
+					<img
+						class="song-info__imgbox"
+						src="/<%= prevSong.thumbnail %>"
+						alt=""
+					/>
+					<div class="song-info-text">
+						<div class="song-info__name"><%= prevSong.songName %></div>
+						<div class="song-info__author">
+							<%= prevSong.Author && prevSong.Author.authorName %>
+						</div>
+					</div>
+					<% } else { %>
+					<img
+						class="song-info__imgbox"
+						src="https://i1.sndcdn.com/avatars-Z4s88xxyK1sqIgNX-laBv3A-t500x500.jpg"
+						alt=""
+					/>
+					<div class="song-info-text">
+						<div class="song-info__name">Unknow</div>
+						<div class="song-info__author">Unknow</div>
+					</div>
+					<% } %>
+				</div>
+
+				<div class="audio-part">
+					<% if (prevSong) { %>
+					<audio
+						id="audio-hidden"
+						controls
+						src="/<%= prevSong.songFile  %>"
+					></audio>
+					<% } else { %>
+					<audio
+						id="audio-hidden"
+						controls
+						src="/"
+					></audio>
+					<% } %>
+				</div>
+				<div class="audio-part"></div>
+			</div>
+		</main>
+		<!-- Button trigger modal -->
+		<!-- Modal -->
+		<div
+			class="modal fade"
+			id="verifyModal"
+			tabindex="-1"
+			aria-labelledby="exampleModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-dialog-centered text-dark">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5
+							class="modal-title"
+							id="exampleModalLabel"
+						>
+							Xác nhận
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">Bạn có muốn xóa không ?</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-dismiss="modal"
+							data-btn="cancel"
+						>
+							Hủy
+						</button>
+						<button
+							type="button"
+							class="btn btn-primary"
+							data-btn="yes"
+						>
+							Xóa
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<% if (auth) { %>
+		<script src="/assets/js/scriptaudioAuth.js"></script>
+		<% } else { %>
+		<script src="/assets/js/scriptaudio.js"></script>
+		<% } %>
+		<script
+			src="https://kit.fontawesome.com/20b919bd26.js"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>

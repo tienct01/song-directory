@@ -1,0 +1,41 @@
+<div class="d-flex justify-content-between">
+  <h1 class="heading"><a href="/">My album</a></h1>
+<nav class="navbar navbar-expand-lg">
+	<a
+		href="/songs/"
+    <% if (req.baseUrl + req.path === '/songs/') { %>
+     class="nav-link active"
+    <% } else { %>
+      class="nav-link"
+    <% } %>
+		>Bài hát</a
+	>
+	<a
+		href="/songs/create/"
+		<% if (req.baseUrl + req.path === '/songs/create/') { %>
+     class="nav-link active"
+    <% } else { %>
+      class="nav-link"
+    <% } %>
+		>Thêm bài hát</a
+	>
+	<a
+		href="/authors/"
+		<% if (req.baseUrl + req.path === '/authors/') { %>
+     class="nav-link active"
+    <% } else { %>
+      class="nav-link"
+    <% } %>
+		>Tác giả</a
+	>
+	<a
+		href="/authors/create/"
+		<% if (req.baseUrl + req.path === '/authors/create/') { %>
+     class="nav-link active"
+    <% } else { %>
+      class="nav-link"
+    <% } %>
+		>Thêm tác giả</a
+	>
+</nav>
+</div>
