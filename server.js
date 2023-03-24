@@ -9,6 +9,7 @@ require("dotenv").config();
 const songRouter = require("./routes/song.route.js");
 const authorRouter = require("./routes/author.route.js");
 const authRouter = require("./routes/auth.route.js");
+const errorHandler = require("./middlewares/errorHandler.js");
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
@@ -53,6 +54,7 @@ app.use("/", authRouter);
 app.use("/notfound", (req, res) => {
 	return res.render("notfound");
 });
+app.use(errorHandler);
 
 app.listen(process.env.PORT || 4000, () => {
 	console.log("http://localhost:" + process.env.PORT);

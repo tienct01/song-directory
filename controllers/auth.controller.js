@@ -1,13 +1,21 @@
-async function authCheck(req, res) {
-	const { authcode } = req.query;
-	if (authcode === "duytiendeptrai") {
-		req.session.auth = true;
+async function authCheck(req, res, next) {
+	try {
+		const { authcode } = req.query;
+		if (authcode === "duytiendeptrai") {
+			req.session.auth = true;
+		}
+		return res.redirect("/");
+	} catch (error) {
+		next(error);
 	}
-	return res.redirect("/");
 }
-async function logout(req, res) {
-	req.session.destroy();
-	return res.redirect("/");
+async function logout(req, res, next) {
+	try {
+		req.session.destroy();
+		return res.redirect("/");
+	} catch (error) {
+		next(error);
+	}
 }
 
 module.exports = {
