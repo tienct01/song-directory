@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const fs = require("fs");
 const sequelize = require("./database.js");
 const methodOverride = require("method-override");
 const session = require("express-session");
@@ -11,6 +12,9 @@ const authorRouter = require("./routes/author.route.js");
 const authRouter = require("./routes/auth.route.js");
 const errorHandler = require("./middlewares/errorHandler.js");
 
+if (!fs.existsSync("./uploads")) {
+	fs.mkdirSync("./uploads");
+}
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 
