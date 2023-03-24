@@ -10,6 +10,7 @@ async function index(req, res, next) {
 		const songs = await Song.findAll({
 			include: {
 				model: Author,
+				as: "Author",
 			},
 			where: {
 				[Op.or]: [
@@ -19,7 +20,7 @@ async function index(req, res, next) {
 						},
 					},
 					{
-						"$author.authorName$": {
+						"$Author.authorName$": {
 							[Op.like]: `%${q}%`,
 						},
 					},
