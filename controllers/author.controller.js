@@ -1,4 +1,10 @@
 const Author = require("../models/author.js");
+const {
+	uploadImage,
+	destroyAsset,
+} = require("../services/cloudinarySerivices.js");
+const fs = require("fs/promises");
+const { getPublicId } = require("../utils/getPublicId.js");
 
 async function index(req, res, next) {
 	try {
@@ -27,11 +33,14 @@ async function store(req, res, next) {
 	try {
 		const { authorName, dob } = req.body;
 
+		const resultImage = await uploadImage(
+			process.cwd() + "/uploads/" + req.file.filename
+		);
+
 		await Author.create({
 			authorName: authorName,
 			dob: dob,
-			avatar:
-				(req.file && req.file.filename) || "avatar-1678863707530-697403966.jpg",
+			avatar: resultImage.url,
 		});
 		return res.redirect(302, "/authors");
 	} catch (error) {
@@ -52,12 +61,17 @@ async function update(req, res) {
 async function destroy(req, res, next) {
 	try {
 		const { id } = req.params;
-		const author = await Author.destroy({
+
+		const author = await Author.findByPk(id);
+
+		const deletedId = await Author.destroy({
 			where: {
 				id: id,
 			},
 		});
-		if (!author) return res.redirect("/notfound");
+		if (!deletedId) return res.redirect("/notfound");
+		const publicId = getPublicId(author.avatar);
+		destroyAsset(publicId, "image");
 		return res.redirect("/authors");
 	} catch (error) {
 		next(error);

@@ -2,6 +2,12 @@ const { Op } = require("sequelize");
 const Author = require("../models/author.js");
 const Song = require("../models/song.js");
 const fs = require("fs");
+const {
+	uploadAudio,
+	uploadImage,
+	destroyAsset,
+} = require("../services/cloudinarySerivices.js");
+const getPublicId = require("../utils/getPublicId.js");
 
 async function index(req, res, next) {
 	try {
@@ -69,10 +75,17 @@ async function create(req, res, next) {
 
 async function store(req, res, next) {
 	try {
+		const resultImage = await uploadImage(
+			process.cwd() + "/uploads/" + req.files["thumbnail"][0].filename
+		);
+		const resultAudio = await uploadAudio(
+			process.cwd() + "/uploads/" + req.files["song"][0].filename
+		);
+
 		await Song.create({
 			songName: req.files["song"][0].originalname,
-			songFile: req.files["song"][0].filename,
-			thumbnail: req.files["thumbnail"][0].filename,
+			songFile: resultAudio.url,
+			thumbnail: resultImage.url,
 			authorId: req.body.authorId,
 		});
 		return res.redirect(302, "/songs");
@@ -93,19 +106,12 @@ async function destroy(req, res, next) {
 		if (!deleted) {
 			return res.redirect("/notfound");
 		}
-		// Delete in uploads folder
-		fs.unlink(process.cwd() + "/uploads/" + todeleted.songFile, (err) => {
-			if (err) console.log(err);
-			else {
-				console.log("/uploads/" + todeleted.songFile + " Deleted");
-			}
-		});
-		fs.unlink(process.cwd() + "/uploads/" + todeleted.thumbnail, (err) => {
-			if (err) console.log(err);
-			else {
-				console.log("/uploads/" + todeleted.thumbnail + " Deleted");
-			}
-		});
+
+		const publicIdImage = getPublicId(todeleted.songFile);
+		const publicIdAudio = getPublicId(todeleted.thumbnail);
+
+		destroyAsset(publicIdImage, "image");
+		destroyAsset(publicIdAudio, "video");
 
 		return res.redirect("/songs");
 	} catch (error) {

@@ -22,7 +22,7 @@ window.onload = function () {
 			if (songData) {
 				const s = await fetch(`/songs/${songData}`).then((res) => res.json());
 				console.log("data", s);
-				img.src = `/${s.thumbnail}`;
+				img.src = `${s.thumbnail}`;
 				songName.textContent = s.songName;
 				authorName.textContent = s.Author ? s.Author.authorName : "Unknow";
 			}

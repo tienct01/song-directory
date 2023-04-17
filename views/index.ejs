@@ -18,6 +18,11 @@
 			rel="stylesheet"
 			href="/assets/css/styles.css"
 		/>
+		<link
+			rel="shortcut icon"
+			href="/assets/Circle-icons-music.svg"
+			type="image/x-icon"
+		/>
 
 		<script
 			src="/assets/js/bootstrap.bundle.min.js"
@@ -74,13 +79,13 @@
 				<% for( let index = 0; index < songs.length; index++ ) { %>
 				<div
 					class="mix col-lg-3 col-md-4 col-sm-6"
-					data-songurl="/<%= songs[index].songFile %>"
+					data-songurl="<%= songs[index].songFile %>"
 					data-song="<%= songs[index].id %>"
 				>
 					<div class="playlist-item">
 						<div class="playlist-item__imgbox">
 							<img
-								src="/<%= songs[index].thumbnail %>"
+								src="<%= songs[index].thumbnail %>"
 								alt="Avatar"
 								class="playlist-item__img"
 							/>
@@ -128,7 +133,7 @@
 					<% if (prevSong) { %>
 					<img
 						class="song-info__imgbox"
-						src="/<%= prevSong.thumbnail %>"
+						src="<%= prevSong.thumbnail %>"
 						alt=""
 					/>
 					<div class="song-info-text">
@@ -155,7 +160,7 @@
 					<audio
 						id="audio-hidden"
 						controls
-						src="/<%= prevSong.songFile  %>"
+						src="<%= prevSong.songFile  %>"
 					></audio>
 					<% } else { %>
 					<audio
